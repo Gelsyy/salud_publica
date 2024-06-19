@@ -1,0 +1,54 @@
+{% extends 'home.html' %}
+
+{% block body %}
+    <h1>Inventarios por Hospital</h1>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <label for="hospital_id">Selecciona un hospital:</label>
+        <select name="hospital_id" id="hospital_id">
+            <option value="">Selecciona un hospital</option>
+            {% for hospital in hospitales %}
+                <option value="{{ hospital.id_hospital }}">{{ hospital.nombre_hospital }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Ver Inventarios</button>
+    </form>
+    
+    {% if inventarios %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Identificador</th>
+                    <th>Lote</th>
+                    <th>ID Insumo</th>
+                    <th>ID Hospital</th>
+                    <th>Entrada</th>
+                    <th>Salidas</th>
+                    <th>Existencia</th>
+                    <th>Fecha Vencimiento</th>
+                    <th>Fecha Entrada</th>
+                    <th>Modificar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for inventario in inventarios %}
+                    <tr>
+                        <td>{{ inventario.id_inventario }}</td>
+                        <td>{{ inventario.lote }}</td>
+                        <td>{{ inventario.id_insumo }}</td>
+                        <td>{{ inventario.id_hospital }}</td>
+                        <td>{{ inventario.cantidad_entrada }}</td>
+                        <td>{{ inventario.cantidad_salida }}</td>
+                        <td>{{ inventario.existencia }}</td>
+                        <td>{{ inventario.fecha_vencimiento }}</td>
+                        <td>{{ inventario.fecha_entrada }}</td>
+                        <td><a href="{% url 'editar_inventario' inventario.id_inventario %}">EDITAR</a></td>
+                        <td><a href="{% url 'eliminar_inventario' inventario.id_inventario %}">ELIMINAR</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    
+    {% endif %}
+{% endblock body %}

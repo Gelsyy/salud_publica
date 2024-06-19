@@ -1,0 +1,14 @@
+#{% extends 'home.html' %}
+
+{% block body %}
+<form method="POST">
+    {% csrf_token %}
+    {% if error %}
+       <h2>{{ error }}</h2>
+    {% else %}
+        {{entrada_form.as_p}}
+    {% endif %}    
+    <button type="submit"> CREAR </button>
+</form>
+{% endblock body %}
+    
