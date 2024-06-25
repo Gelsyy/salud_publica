@@ -29,12 +29,8 @@
                     <td>{{ inventario.existencia }}</td>
                     <td>{{ inventario.fecha_vencimiento }}</td>
                     <td>{{ inventario.fecha_entrada }}</td>
-                    <td> <a href="{% url 'editar_inventario' inventario.id_inventario %}">EDITAR</a>
-                    
-                  </td>
-                  <td> <a href="{% url 'eliminar_inventario' inventario.id_inventario %}">ELIMINAR</a>
-                    
-                  </td>
+                    <td> <a href="{% url 'editar_inventario' inventario.id_inventario %}">EDITAR</a></td>
+                    <td> <a href="{% url 'eliminar_inventario' inventario.id_inventario %}">ELIMINAR</a></td>
                 </tr>
           {% endfor %}
       </tbody>
