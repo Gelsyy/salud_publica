@@ -48,8 +48,11 @@ def eliminarInventario(request, id):
 
 def inventario_por_hospital(request):
     hospitales = Hospital.objects.all()
-
-    if request.method == 'POST':
+    context = {
+        'hospitales': hospitales,
+    }
+    
+    if request.method == "POST":
         hospital_id = request.POST['hospital_id']
         hospital = Hospital.objects.get(id_hospital=hospital_id)
         inventarios = Inventario.objects.filter(id_hospital=hospital)
@@ -61,6 +64,4 @@ def inventario_por_hospital(request):
                 
         return render(request, 'inventario.html', context)
 
-    
-
-    
+    return render(request, 'inventario.html', context)

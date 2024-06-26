@@ -7,7 +7,6 @@
         {% csrf_token %}
         <label for="hospital_id">Selecciona un hospital:</label>
         <select name="hospital_id" id="hospital_id">
-            <option value="">Selecciona un hospital</option>
             {% for hospital in hospitales %}
                 <option value="{{ hospital.id_hospital }}">{{ hospital.nombre_hospital }}</option>
             {% endfor %}
