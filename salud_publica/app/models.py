@@ -1,7 +1,5 @@
 from django.db import models
 
-# Create your models here.
-
 
 class Insumo(models.Model):
     id_insumo = models.AutoField(primary_key=True)
@@ -11,7 +9,6 @@ class Insumo(models.Model):
           return self.nombre_insumo
 
 class Hospital(models.Model):
-
     id_hospital = models.AutoField(primary_key=True)
     nombre_hospital = models.CharField(max_length=255)
 

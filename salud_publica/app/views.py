@@ -28,17 +28,17 @@ def editarInventario(request, id):
     error = None 
 
     try:
-        entrada = Inventario.objects.get(id_inventario=id) 
+        entrada = Inventario.objects.get(id_inventario = id) 
         if request.method == 'GET':
             entrada_form = EditarForm(instance=entrada)
         else:
             entrada_form = EditarForm(request.POST, instance=entrada)
             if entrada_form.is_valid():
                 entrada_form.save()
-                return redirect('detalles_inventario_hospital', hospital_id=entrada.id_hospital.id_hospital)
+                return redirect('editar_inventario', id)  
     except Inventario.DoesNotExist as e:
         error = e 
-    return render(request, 'editar.html', {'entrada_form': entrada_form, 'error': error})  
+    return render(request, 'entrada.html', {'entrada_form': entrada_form, 'error': error})    
     
 def eliminarInventario(request, id):
     inventario= Inventario.objects.get(id_inventario=id)      
@@ -48,26 +48,21 @@ def eliminarInventario(request, id):
 
 
 def inventario_por_hospital(request):
-    if request.method == 'POST':
-        hospital_id = request.POST.get('hospital_id')
-        if hospital_id:
-            return redirect('detalles_inventario_hospital', hospital_id=hospital_id)
-    
+   
     hospitales = Hospital.objects.all()
-    context = {
-        'hospitales': hospitales
-    }
-    return render(request, 'hospital.html', context)
 
-def detalles_inventario_hospital(request, hospital_id):
-    hospital = Hospital.objects.get(id_hospital=hospital_id)
-    inventarios = Inventario.objects.filter(id_hospital=hospital)
-    
-    context = {
-        'hospital': hospital,
-        'inventarios': inventarios
-    }
-    return render(request, 'listar_inventario.html', context)
+    if request.method == 'POST':
+        hospital_id = request.POST['hospital_id']
+        hospital = Hospital.objects.get(id_hospital=hospital_id)
+        inventarios = Inventario.objects.filter(id_hospital=hospital)
+                
+        context = {
+            'hospitales': hospitales,
+            'inventarios': inventarios
+        }
+                
+        return render(request, 'inventario.html', context)
+
     
 
     
