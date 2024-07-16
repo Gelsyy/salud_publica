@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+{% load static%}
+<html>
+	<head>
+		<!-- Basic Page Info -->
+		<meta charset="utf-8" />
+		<title>salud_publica</title>
+
+		<!-- Site favicon -->
+		<link
+			rel="apple-touch-icon"
+			sizes="180x180"
+			href="{% static 'vendors/images/apple-touch-icon.png' %}"
+		/>
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="32x32"
+			href="{% static 'vendors/images/favicon-32x32.png' %}"
+		/>
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="16x16"
+			href="{% static 'vendors/images/favicon-16x16.png' %}"
+		/>
+
+		<!-- Mobile Specific Metas -->
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, maximum-scale=1"
+		/>
+
+		<!-- Google Font -->
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+			rel="stylesheet"
+		/>
+		<!-- CSS -->
+		<link rel="stylesheet" type="text/css" href="{% static 'vendors/styles/core.css' %}" />
+		<link
+			rel="stylesheet"
+			type="text/css"
+			href="{% static 'vendors/styles/icon-font.min.css' %}"
+		/>
+		<link
+			rel="stylesheet"
+			type="text/css"
+			href="{% static 'src/plugins/datatables/css/dataTables.bootstrap4.min.css' %}"
+		/>
+		<link
+			rel="stylesheet"
+			type="text/css"
+			href="{% static 'src/plugins/datatables/css/responsive.bootstrap4.min.css' %}"
+		/>
+		<link rel="stylesheet" type="text/css" href="{% static 'vendors/styles/style.css' %}" />
+		<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script
+			async
+			src="https://www.googletagmanager.com/gtag/js?id=G-GBZ3SGGX85"
+		></script>
+		<script
+			async
+			src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2973766580778258"
+			crossorigin="anonymous"
+		></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag() {
+				dataLayer.push(arguments);
+			}
+			gtag("js", new Date());
+
+			gtag("config", "G-GBZ3SGGX85");
+		</script>
+		<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+       <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/css/select2.min.css" rel="stylesheet" />
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js"></script>
+		
+		<!-- Google Tag Manager -->
+		<script>
+			(function (w, d, s, l, i) {
+				w[l] = w[l] || [];
+				w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+				var f = d.getElementsByTagName(s)[0],
+					j = d.createElement(s),
+					dl = l != "dataLayer" ? "&l=" + l : "";
+				j.async = true;
+				j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+				f.parentNode.insertBefore(j, f);
+			})(window, document, "script", "dataLayer", "GTM-NXZMQSS");
+		</script>
+		<!-- End Google Tag Manager -->
+	</head>
+	<body>
+		<div class="pre-loader">
+			<div class="pre-loader-box">
+				<div class="loader-logo">
+					<img src="{% static 'vendors/images/deskapp-logo.svg' %}" alt="" />
+				</div>
+				<div class="loader-progress" id="progress_div">
+					<div class="bar" id="bar1"></div>
+				</div>
+				<div class="percent" id="percent1">0%</div>
+				<div class="loading-text">Cargando...</div>
+			</div>
+		</div>
+		<div class="header">
+			<div class="header-left">
+				<!-- Icono del menú y búsqueda -->
+				<div class="menu-icon bi bi-list"></div>
+				<div class="search-toggle-icon bi bi-search" data-toggle="header_search"></div>
+				<div class="header-search">
+					{% block barra %}
+		
+			
+					{% endblock barra %}
+				</div>
+			</div>
+     
+			<!-- Barra de la derecha -->
+			<div class="header-right d-flex align-items-center ml-auto">
+				<div class="mp-20">
+					<!-- Botón de agregar inventario -->
+					<a href="{% url 'entrada' %}" class="btn btn-primary" title="Agregar inventario">
+						<i class="bi bi-plus-lg"></i>
+					</a>
+				</div>
+				
+				<div class="dashboard-setting user-notification ml-3">
+					<!-- Configuración del dashboard -->
+					<div class="dropdown">
+						<a class="dropdown-toggle no-arrow" href="javascript:;" data-toggle="right-sidebar">
+							<i class="dw dw-settings2"></i>
+						</a>
+					</div>
+				</div>
+				
+				<div class="user-info-dropdown ml-3">
+					<!-- Información del usuario -->
+					<div class="dropdown">
+						<a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown">
+							<span class="user-icon">
+								<img src="{% static 'vendors/images/o.png' %}" alt="" />
+							</span>
+							<span class="user-name">Usuario</span>
+						</a>
+						<div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
+							<a class="dropdown-item" href="login.html"><i class="dw dw-logout"></i> Salir</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+
+		<div class="right-sidebar">
+			<div class="sidebar-title">
+				<h3 class="weight-600 font-16 text-blue">
+					Configuracion
+					<span class="btn-block font-weight-400 font-12"
+						>Interfaz</span
+					>
+				</h3>
+				<div class="close-sidebar" data-toggle="right-sidebar-close">
+					<i class="icon-copy ion-close-round"></i>
+				</div>
+			</div>
+			<div class="right-sidebar-body customscroll">
+				<div class="right-sidebar-body-content">
+					<h4 class="weight-600 font-18 pb-10">Barra Horizontal</h4>
+					<div class="sidebar-btn-group pb-30 mb-10">
+						<a
+							href="javascript:void(0);"
+							class="btn btn-outline-primary header-white active"
+							>White</a
+						>
+						<a
+							href="javascript:void(0);"
+							class="btn btn-outline-primary header-dark"
+							>Dark</a
+						>
+					</div>
+
+					<h4 class="weight-600 font-18 pb-10">Barra Vertical</h4>
+					<div class="sidebar-btn-group pb-30 mb-10">
+						<a
+							href="javascript:void(0);"
+							class="btn btn-outline-primary sidebar-light"
+							>White</a
+						>
+						<a
+							href="javascript:void(0);"
+							class="btn btn-outline-primary sidebar-dark active"
+							>Dark</a
+						>
+					</div>
+
+					
+
+					<div class="reset-options pt-30 text-center">
+						<button class="btn btn-danger" id="reset-settings">
+							Restablecer Configuracion
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	{% block bar %}
+		<div class="left-side-bar">
+			<div class="brand-logo">
+				<a href="index.html">
+					<img src="{% static 'vendors/images/deskapp-logo.svg' %}" alt="" class="dark-logo" />
+					<img
+						src="{% static 'vendors/images/deskapp-logo-white.svg' %}"
+						alt=""
+						class="light-logo"
+					/>
+				</a>
+				<div class="close-sidebar" data-toggle="left-sidebar-close">
+					<i class="ion-close-round"></i>
+				</div>
+			</div>
+			<div class="menu-block customscroll">
+				<div class="sidebar-menu">
+					<ul id="accordion-menu">
+						
+						
+						<li class="dropdown">
+							<a href="javascript:;" class="dropdown-toggle">
+								<span class="micon bi bi-table"></span
+								><span class="mtext">Hospitales</span>
+							</a>
+							<ul class="submenu">
+								{% for hospital in hospitales %}
+								<li>
+									<a href="{% url 'detalles_inventario_hospital' id_hospital=hospital.id_hospital %}">
+										{{ hospital.nombre_hospital }}
+									</a>
+								</li>
+							{% endfor %}
+
+                           </ul>
+
+						</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+
+	{% endblock bar %}
+		
+					<!-- Checkbox select Datatable End -->
+					<!-- Export Datatable start -->
+					
+					{% block cuerpo %}
+                     
+
+					{% endblock cuerpo %}	
+					<!-- Export Datatable End -->
+				</div>
+				
+			</div>
+		</div>
+	
+	
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+		 
+
+
+		<!-- js -->
+		<script src="{% static 'vendors/scripts/core.js' %}"></script>
+		<script src="{% static 'vendors/scripts/script.min.js' %}"></script>
+		<script src="{% static 'vendors/scripts/process.js' %}"></script>
+		<script src="{% static 'vendors/scripts/layout-settings.js' %}"></script>
+		<script src="{% static 'src/plugins/datatables/js/jquery.dataTables.min.js' %}"></script>
+		<script src="{% static 'src/plugins/datatables/js/dataTables.bootstrap4.min.js' %}"></script>
+		<script src="{% static 'src/plugins/datatables/js/dataTables.responsive.min.js' %}"></script>
+		<script src="{% static 'src/plugins/datatables/js/responsive.bootstrap4.min.js' %}"></script>
+		<!-- buttons for Export datatable -->
+		<script src="{% static 'src/plugins/datatables/js/dataTables.buttons.min.js' %}"></script>
+		<script src="{% static 'src/plugins/datatables/js/buttons.bootstrap4.min.js' %}"></script>
+		<script src="{% static 'src/plugins/datatables/js/buttons.print.min.js' %}"></script>
+		<script src="{% static 'src/plugins/datatables/js/buttons.html5.min.js' %}"></script>
+		<script src="{% static 'src/plugins/datatables/js/buttons.flash.min.js' %}"></script>
+		<script src="{% static 'src/plugins/datatables/js/pdfmake.min.js' %}"></script>
+		<script src="{% static 'src/plugins/datatables/js/vfs_fonts.js' %}"></script>
+		<!-- Datatable Setting js -->
+		<script src="{% static 'vendors/scripts/datatable-setting.js' %}"></script>
+		<!-- Google Tag Manager (noscript) -->
+		<noscript
+			><iframe
+				src="https://www.googletagmanager.com/ns.html?id=GTM-NXZMQSS"
+				height="0"
+				width="0"
+				style="display: none; visibility: hidden"
+			></iframe
+		></noscript>
+		<!-- End Google Tag Manager (noscript) -->
+		
+	
+		
+	</body>
+</html>

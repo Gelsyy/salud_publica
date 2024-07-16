@@ -1,0 +1,155 @@
+{% extends 'central.html' %}
+
+{% block barra %}
+<form method="get" action="{% url 'detalles_inventario_hospital' id_hospital=hospital.id_hospital %}">
+    <div class="form-group mb-0">
+        <i class="dw dw-search2 search-icon"></i>
+        <input type="text" class="form-control search-input" placeholder="Desplaza el buscador" />
+        <div class="dropdown">
+            <a class="dropdown-toggle no-arrow" href="#" role="button" data-toggle="dropdown">
+                <i class="ion-arrow-down-c"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <!-- Opciones de búsqueda -->
+                <div class="form-group row">
+                    <label class="col-sm-12 col-md-2 col-form-label">Lote</label>
+                    <div class="col-sm-12 col-md-10">
+                        <input class="form-control form-control-sm form-control-line" type="text" name="lote" value="{{ request.GET.lote }}">
+                    </div>
+                </div>
+               
+                <div class="form-group row">
+                    <label class="col-sm-12 col-md-2 col-form-label">Insumo</label>
+                    <div class="col-sm-12 col-md-10">
+                        <select class="form-control form-control-sm js-example-basic-single" name="insumo_nombre">
+                            <option value="">Selecciona un insumo</option>
+                            {% for insumo in nombre_insumos %}
+                                <option value="{{ insumo.id_insumo }}" {% if insumo.id_insumo == insumo_id %}selected{% endif %}>{{ insumo.nombre_insumo }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                {% block js_page %}
+                <script>
+                    $(document).ready(function() {
+                        $('.js-example-basic-single').select2({
+                            minimumInputLength: 1,
+                            language: {
+                                inputTooShort: function () {
+                                    return "Ingresa al menos un carácter";
+                                },
+                                noResults: function () {
+                                    return "No se encontraron resultados";
+                                },
+                                searching: function () {
+                                    return "Buscando...";
+                                }
+                            }
+                        });
+                    });
+                </script>
+                {% endblock js_page %}
+                <div class="form-group row">
+                    <label class="col-sm-12 col-md-2 col-form-label">Fecha entrada</label>
+                    <div class="col-sm-12 col-md-10">
+                        <input class="form-control form-control-sm form-control-line" type="date" name="fecha_entrada" value="{{ request.GET.fecha_entrada }}">
+                    </div>
+                </div>
+                <div class="text-right">
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+{% endblock barra %}
+
+{% block bar %}
+{% endblock bar %}
+
+{% block cuerpo %}
+    <div class="card-box mb-30">
+        <div class="pd-20">
+            <h4 class="text-blue h4">Salud Publica</h4>
+            <div class="text-right mb-20">
+              
+            </div>
+           
+        </div>
+        <div class="pb-20">
+            {% if inventarios %}
+            
+                <table class="table hover multiple-select-row data-table-export nowrap">
+                    <thead>
+                       
+                        <tr>
+                          
+                            <th class="table-plus datatable-nosort">Lote</th>
+                            <th>Insumo</th>
+                            <th>Entrada</th>
+                            <th>Salidas</th>
+                            <th>Existencia</th>
+                            <th>Fecha Vencimiento</th>
+                            <th>Fecha Entrada</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        {% for inventario in inventarios %}
+                            {% if inventario.existencia > 0 %}
+                            <tr>
+                                <td class="table-plus">{{ inventario.lote }}</td>
+                                <td>{{ inventario.id_insumo }}</td>
+                                <td>{{ inventario.cantidad_entrada }}</td>
+                                <td>
+                                    <form method="POST" action="{% url 'aumentar_salidas' inventario.id_inventario %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <div class="input-group">
+                                            <input type="number" name="cantidad_salida" value="{{ inventario.cantidad_salida }}" min="1" class="form-control" style="max-width: 80px;">
+                                            <div class="input-group-append">
+                                                <button type="submit" class="btn btn-primary"><i class="dw dw-chevron-right"></i> OK</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </td>
+                                
+                                <td>{{ inventario.existencia }}</td>
+                                <td>{{ inventario.fecha_vencimiento }}</td>
+                                <td>{{ inventario.fecha_entrada }}</td>
+                                <td>
+                                    <div class="dropdown">
+                                        <a class="btn btn-link font-24 p-0 line-height-1 no-arrow dropdown-toggle" href="#" role="button" data-toggle="dropdown">
+                                            <i class="dw dw-more"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
+                                            <a class="dropdown-item" href="#">
+                                                <i class="dw dw-edit2"></i> Editar
+                                            </a>
+                                            <a class="dropdown-item" href="{% url 'eliminar_inventario' inventario.id_inventario %}">
+                                                <i class="dw dw-delete-3"></i> Eliminar
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+        <div class="text-right mb-20">
+            <a href="{% url 'listar_hospitales' %}" class="btn btn-primary" >Volver</a>
+        </div>
+        
+    </div>
+{% endblock cuerpo %}
+
+
+
+
+
+
