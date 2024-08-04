@@ -125,13 +125,9 @@
      
 			<!-- Barra de la derecha -->
 			<div class="header-right d-flex align-items-center ml-auto">
-				<div class="mp-20">
-					<!-- Botón de agregar inventario -->
-					<a href="{% url 'entrada' %}" class="btn btn-primary" title="Agregar inventario">
-						<i class="bi bi-plus-lg"></i>
-					</a>
-				</div>
+				{% block agregar %}
 				
+				{% endblock agregar %}
 				<div class="dashboard-setting user-notification ml-3">
 					<!-- Configuración del dashboard -->
 					<div class="dropdown">
@@ -148,10 +144,10 @@
 							<span class="user-icon">
 								<img src="{% static 'vendors/images/o.png' %}" alt="" />
 							</span>
-							<span class="user-name">Usuario</span>
+							<span class="user-name">{{ user.username }}</span>
 						</a>
 						<div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
-							<a class="dropdown-item" href="login.html"><i class="dw dw-logout"></i> Salir</a>
+							<a class="dropdown-item" href="{% url 'logout' %}"><i class="dw dw-logout"></i> Salir</a>
 						</div>
 					</div>
 				</div>
@@ -178,12 +174,12 @@
 						<a
 							href="javascript:void(0);"
 							class="btn btn-outline-primary header-white active"
-							>White</a
+							>Claro</a
 						>
 						<a
 							href="javascript:void(0);"
 							class="btn btn-outline-primary header-dark"
-							>Dark</a
+							>Oscuro</a
 						>
 					</div>
 
@@ -192,12 +188,12 @@
 						<a
 							href="javascript:void(0);"
 							class="btn btn-outline-primary sidebar-light"
-							>White</a
+							>Claro</a
 						>
 						<a
 							href="javascript:void(0);"
 							class="btn btn-outline-primary sidebar-dark active"
-							>Dark</a
+							>Oscuro</a
 						>
 					</div>
 

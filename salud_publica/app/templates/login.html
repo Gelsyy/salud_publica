@@ -105,40 +105,15 @@
 							<div class="login-title">
 								<h2 class="text-center text-primary">Bienvenido</h2>
 							</div>
-							<form>
-								<div class="select-role">
-									<div class="btn-group btn-group-toggle" data-toggle="buttons">
-										<label class="btn active">
-											<input type="radio" name="options" id="admin" />
-											<div class="icon">
-												<img
-													src="{% static 'vendors/images/briefcase.svg' %}"
-													class="svg"
-													alt=""
-												/>
-											</div>
-											<span>Soy</span>
-											Vizualizador
-										</label>
-										<label class="btn">
-											<input type="radio" name="options" id="user" />
-											<div class="icon">
-												<img
-													src="{% static 'vendors/images/briefcase.svg' %}"
-													class="svg"
-													alt=""
-												/>
-											</div>
-											<span>Soy</span>
-											Adminitrador
-										</label>
-									</div>
-								</div>
+							<form method="POST">
+								{% csrf_token %}
+								
 								<div class="input-group custom">
 									<input
 										type="text"
 										class="form-control form-control-lg"
 										placeholder="Usuario"
+										name="username"
 									/>
 									<div class="input-group-append custom">
 										<span class="input-group-text"
@@ -151,6 +126,7 @@
 										type="password"
 										class="form-control form-control-lg"
 										placeholder="**********"
+										name="password"
 									/>
 									<div class="input-group-append custom">
 										<span class="input-group-text"
@@ -171,24 +147,16 @@
 											>
 										</div>
 									</div>
-									<div class="col-6">
-										<div class="forgot-password">
-											<a href="forgot-password.html">Olvidaste la contraseña</a>
-										</div>
-									</div>
+									
 								</div>
 								<div class="row">
 									<div class="col-sm-12">
 										<div class="input-group mb-0">
-											<!--
-											use code for form submit
-											<input class="btn btn-primary btn-lg btn-block" type="submit" value="Entrar">
-										-->
-											<a
-												class="btn btn-primary btn-lg btn-block"
-												href="index.html"
-												>Entrar</a
-											>
+											
+											
+											<button class="btn btn-primary btn-lg btn-block" type="submit" >Entrar</button>
+										
+											
 										</div>
 										
 										

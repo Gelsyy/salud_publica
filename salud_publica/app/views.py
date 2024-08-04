@@ -7,24 +7,41 @@ from django.db.models import Q
 from datetime import datetime
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import logout
 
-def error(request):
-    return render(request, 'error.html')
+def custom_logout(request):
+    logout(request)
+    return redirect('login')
+
+
+def error(request, id_hospital=None):
+    context = {'id_hospital': id_hospital}
+    return render(request, 'error.html', context)
+
 
 def login(request):
-    return render(request, 'login.html')
+   return render(request, 'login.html')
   
+def fin(request):
+   return render(request, 'fin.html')
 
 def aumentar_salidas(request, id_inventario):
     inventario = get_object_or_404(Inventario, id_inventario=id_inventario)
 
     if request.method == 'POST':
         cantidad_salida = int(request.POST.get('cantidad_salida', 0))
-        if cantidad_salida <= inventario.cantidad_entrada:
+        if cantidad_salida <= inventario.existencia:
             inventario.cantidad_salida += cantidad_salida
             inventario.save() 
             return redirect('detalles_inventario_hospital', id_hospital=inventario.id_hospital_id)
-    return redirect('error') 
+        else:
+            # Redirigir a la vista de error con el ID del hospital
+            return redirect('error', id_hospital=inventario.id_hospital_id)
+
+    # Si no es un método POST o si hay otro tipo de error, redirigir a la vista de error
+    return redirect('error')
 
 def eliminarInventario(request, id):
     try:
@@ -37,17 +54,28 @@ def eliminarInventario(request, id):
 
     return redirect('detalles_inventario_hospital', id_hospital=id_hospital)
 
-def entrada(request):
+def entrada(request, id_hospital):
+    hospital = get_object_or_404(Hospital, id_hospital=id_hospital)
+
     if request.method == 'POST':
         form = InventarioForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('entrada') 
+            inventario = form.save(commit=False)
+            inventario.id_hospital = hospital
+            inventario.save()
+            return redirect('detalles_inventario_hospital', id_hospital=id_hospital)
+        else:
+            return redirect('error2')
     else:
         form = InventarioForm()
+        
+        
+    context = {
+        'form': form,
+        'hospital': hospital,
+    }
 
-    return render(request, 'entrada.html', {'form': form})
-
+    return render(request, 'entrada.html', context)
 
 
 def listar_hospitales(request):

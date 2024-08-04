@@ -1,5 +1,8 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class Insumo(models.Model):
     id_insumo = models.AutoField(primary_key=True)
@@ -21,6 +24,7 @@ class Hospital(models.Model):
           return self.nombre_hospital
 
 
+        
 class Inventario(models.Model):
     id_inventario = models.AutoField(primary_key=True)
     lote = models.CharField(max_length=255)
@@ -31,17 +35,25 @@ class Inventario(models.Model):
     existencia = models.IntegerField(default=0)
     fecha_vencimiento = models.DateField()
     fecha_entrada = models.DateField()
+    
+    @property
+    def cobertura_field(self):
+        return (self.existencia * 30)/ self.cantidad_entrada
 
     def clean(self):
         # Validación para asegurar que cantidad_salida no supere cantidad_entrada
-        if self.cantidad_salida > self.cantidad_entrada:
-            raise ValidationError("La cantidad de salida no puede ser mayor que la cantidad de entrada.")
+        if self.cantidad_salida > self.existencia:
+            raise ValidationError("La cantidad de salida no puede ser mayor que la existencia.")
 
    
 
     def save(self, *args, **kwargs):
         self.existencia = self.cantidad_entrada - self.cantidad_salida
+        if self.cantidad_entrada != 0:
+            self.cobertura = (self.existencia * 30) / self.cantidad_entrada
+     
         super().save(*args, **kwargs)
 
     def __str__(self):
           return self.lote  
+    

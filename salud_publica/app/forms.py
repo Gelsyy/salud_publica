@@ -7,7 +7,7 @@ class InventarioForm(forms.ModelForm):
         fields = ['lote', 'id_insumo', 'id_hospital', 'cantidad_entrada', 'fecha_vencimiento', 'fecha_entrada']
         widgets = {
             'id_insumo': forms.Select(attrs={'class': 'form-control'}),
-            'id_hospital': forms.Select(attrs={'class': 'form-control'}),
+            'id_hospital': forms.HiddenInput(),
             'fecha_vencimiento': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'fecha_entrada': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
         }

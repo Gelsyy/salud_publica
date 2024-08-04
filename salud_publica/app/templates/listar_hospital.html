@@ -4,7 +4,7 @@
 <form method="get" action="{% url 'detalles_inventario_hospital' id_hospital=hospital.id_hospital %}">
     <div class="form-group mb-0">
         <i class="dw dw-search2 search-icon"></i>
-        <input type="text" class="form-control search-input" placeholder="Desplaza el buscador" />
+        <div class="form-control search-input" contenteditable="false">Desplaza el buscador</div>
         <div class="dropdown">
             <a class="dropdown-toggle no-arrow" href="#" role="button" data-toggle="dropdown">
                 <i class="ion-arrow-down-c"></i>
@@ -20,7 +20,7 @@
                
                 <div class="form-group row">
                     <label class="col-sm-12 col-md-2 col-form-label">Insumo</label>
-                    <div class="col-sm-12 col-md-10">
+                    <div class="col-sm-12 col-md-10" id="insumoSelect">
                         <select class="form-control form-control-sm js-example-basic-single" name="insumo_nombre">
                             <option value="">Selecciona un insumo</option>
                             {% for insumo in nombre_insumos %}
@@ -29,10 +29,17 @@
                         </select>
                     </div>
                 </div>
+
                 {% block js_page %}
                 <script>
                     $(document).ready(function() {
+                        //evita que el click cierre el dropdown
+                        document.getElementById('insumoSelect').addEventListener('click', function(event) {
+                            event.stopPropagation();
+                        });
+
                         $('.js-example-basic-single').select2({
+                            width:"100%",//aumenta el tamaño del select2
                             minimumInputLength: 1,
                             language: {
                                 inputTooShort: function () {
@@ -66,6 +73,15 @@
 
 {% endblock barra %}
 
+{% block agregar %}
+<div class="mp-20">
+    <!-- Botón de agregar inventario -->
+    <a href="{% url 'entrada' id_hospital=hospital.id_hospital %}" class="btn btn-primary" title="Agregar inventario">
+        <i class="bi bi-plus-lg"></i> Agregar
+    </a>
+</div>
+{% endblock agregar %}
+
 {% block bar %}
 {% endblock bar %}
 
@@ -93,6 +109,7 @@
                             <th>Existencia</th>
                             <th>Fecha Vencimiento</th>
                             <th>Fecha Entrada</th>
+                            <th>Cobertura</th>
                             <th>Acción</th>
                         </tr>
                     </thead>
@@ -102,7 +119,9 @@
                             {% if inventario.existencia > 0 %}
                             <tr>
                                 <td class="table-plus">{{ inventario.lote }}</td>
-                                <td>{{ inventario.id_insumo }}</td>
+                                <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                    {{ inventario.id_insumo }}
+                                </td>
                                 <td>{{ inventario.cantidad_entrada }}</td>
                                 <td>
                                     <form method="POST" action="{% url 'aumentar_salidas' inventario.id_inventario %}" class="d-inline">
@@ -119,15 +138,17 @@
                                 <td>{{ inventario.existencia }}</td>
                                 <td>{{ inventario.fecha_vencimiento }}</td>
                                 <td>{{ inventario.fecha_entrada }}</td>
+                                <td style="color: {% if inventario.cobertura_field >= 15 %}green{% else %}red{% endif %};">
+                                    {{ inventario.cobertura_field|floatformat:2 }}
+                                </td>
+                                
                                 <td>
                                     <div class="dropdown">
                                         <a class="btn btn-link font-24 p-0 line-height-1 no-arrow dropdown-toggle" href="#" role="button" data-toggle="dropdown">
                                             <i class="dw dw-more"></i>
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
-                                            <a class="dropdown-item" href="#">
-                                                <i class="dw dw-edit2"></i> Editar
-                                            </a>
+                                            
                                             <a class="dropdown-item" href="{% url 'eliminar_inventario' inventario.id_inventario %}">
                                                 <i class="dw dw-delete-3"></i> Eliminar
                                             </a>
