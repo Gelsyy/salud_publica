@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect, get_object_or_404
 from .forms import InventarioForm
 from .forms import EditarForm
-from .models import Inventario, Hospital, Insumo
+from .models import Inventario, Hospital, Insumo, Profile
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from datetime import datetime
@@ -10,23 +10,37 @@ from django.views.decorators.http import require_GET
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import logout
+from django.urls import reverse_lazy
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def custom_logout(request):
     logout(request)
     return redirect('login')
 
 
+
+@login_required
+def redirect_after_login(request):
+    profile = getattr(request.user, 'profile', None)
+    
+    if profile and profile.hospital:
+        # Redirige a detalles del inventario del hospital asociado
+        return redirect('detalles_inventario_hospital', id_hospital=profile.hospital.id_hospital)
+    else:
+        # Redirige al listado de hospitales si no hay hospital asociado
+        return redirect('listar_hospitales')
+
+@login_required
 def error(request, id_hospital=None):
     context = {'id_hospital': id_hospital}
     return render(request, 'error.html', context)
 
 
-def login(request):
-   return render(request, 'login.html')
   
-def fin(request):
-   return render(request, 'fin.html')
 
+@login_required
 def aumentar_salidas(request, id_inventario):
     inventario = get_object_or_404(Inventario, id_inventario=id_inventario)
 
@@ -43,6 +57,8 @@ def aumentar_salidas(request, id_inventario):
     # Si no es un método POST o si hay otro tipo de error, redirigir a la vista de error
     return redirect('error')
 
+
+@login_required
 def eliminarInventario(request, id):
     try:
         entrada = Inventario.objects.get(id_inventario=id)
@@ -54,6 +70,8 @@ def eliminarInventario(request, id):
 
     return redirect('detalles_inventario_hospital', id_hospital=id_hospital)
 
+
+@login_required
 def entrada(request, id_hospital):
     hospital = get_object_or_404(Hospital, id_hospital=id_hospital)
 
@@ -77,10 +95,11 @@ def entrada(request, id_hospital):
 
     return render(request, 'entrada.html', context)
 
-
+@login_required
 def listar_hospitales(request):
     hospitales = Hospital.objects.all()
     return render(request, 'central.html', {'hospitales': hospitales})
+
 
 
 def detalles_inventario_hospital(request, id_hospital):
@@ -110,5 +129,4 @@ def detalles_inventario_hospital(request, id_hospital):
         'insumo_id': insumo_id,  # Pasar el ID del insumo seleccionado
     }
     return render(request, 'listar_hospital.html', context)
-
 

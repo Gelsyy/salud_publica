@@ -9,7 +9,7 @@ admin.site.register(Insumo)
  
 
 admin.site.register(Hospital)
-
+admin.site.register(Profile)
 
 
 admin.site.register(Inventario)

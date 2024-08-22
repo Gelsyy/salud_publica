@@ -3,6 +3,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.contrib.auth.models import User
 
 class Insumo(models.Model):
     id_insumo = models.AutoField(primary_key=True)
@@ -23,7 +24,12 @@ class Hospital(models.Model):
     def __str__(self):
           return self.nombre_hospital
 
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    hospital = models.ForeignKey(Hospital, on_delete=models.SET_NULL, null=True, blank=True)
 
+    def __str__(self):
+        return self.user.username
         
 class Inventario(models.Model):
     id_inventario = models.AutoField(primary_key=True)
