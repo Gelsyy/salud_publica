@@ -76,9 +76,12 @@
 {% block agregar %}
 <div class="mp-20">
     <!-- Botón de agregar inventario -->
+     {% if not user.is_staff%}
     <a href="{% url 'entrada' id_hospital=hospital.id_hospital %}" class="btn btn-primary" title="Agregar inventario">
         <i class="bi bi-plus-lg"></i> Agregar
     </a>
+     {% endif %}
+
 </div>
 {% endblock agregar %}
 
@@ -110,7 +113,9 @@
                             <th>Fecha Vencimiento</th>
                             <th>Fecha Entrada</th>
                             <th>Cobertura</th>
+                            {% if not user.is_staff%}
                             <th>Acción</th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
@@ -123,6 +128,7 @@
                                     {{ inventario.id_insumo }}
                                 </td>
                                 <td>{{ inventario.cantidad_entrada }}</td>
+                                {% if not user.is_staff%}
                                 <td>
                                     <form method="POST" action="{% url 'aumentar_salidas' inventario.id_inventario %}" class="d-inline">
                                         {% csrf_token %}
@@ -134,27 +140,31 @@
                                         </div>
                                     </form>
                                 </td>
-                                
+                                {% else %}
+                                <td>{{ inventario.cantidad_salida }}</td>
+                                {% endif %}
                                 <td>{{ inventario.existencia }}</td>
                                 <td>{{ inventario.fecha_vencimiento }}</td>
                                 <td>{{ inventario.fecha_entrada }}</td>
                                 <td style="color: {% if inventario.cobertura_field >= 15 %}green{% else %}red{% endif %};">
                                     {{ inventario.cobertura_field|floatformat:2 }}
                                 </td>
-                                
+                                {% if not user.is_staff%}
                                 <td>
                                     <div class="dropdown">
                                         <a class="btn btn-link font-24 p-0 line-height-1 no-arrow dropdown-toggle" href="#" role="button" data-toggle="dropdown">
                                             <i class="dw dw-more"></i>
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
-                                            
+                                         
                                             <a class="dropdown-item" href="{% url 'eliminar_inventario' inventario.id_inventario %}">
                                                 <i class="dw dw-delete-3"></i> Eliminar
                                             </a>
+                                            
                                         </div>
                                     </div>
                                 </td>
+                                {% endif %}
                             </tr>
                             {% endif %}
                         {% endfor %}
@@ -163,7 +173,9 @@
             {% endif %}
         </div>
         <div class="text-right mb-20">
+            {% if user.is_staff%}
             <a href="{% url 'listar_hospitales' %}" class="btn btn-primary" >Volver</a>
+            {% endif %}
         </div>
         
     </div>
