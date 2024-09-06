@@ -75,6 +75,7 @@
 
 			gtag("config", "G-GBZ3SGGX85");
 		</script>
+		
 		<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 		<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 
@@ -96,6 +97,22 @@
 			})(window, document, "script", "dataLayer", "GTM-NXZMQSS");
 		</script>
 		<!-- End Google Tag Manager -->
+		<style>
+			/* Estilos para el bloque cuerpo */
+			.cuerpo-background {
+				background-image: url("{% static 'images/salud.jpg' %}");
+				background-size: cover;
+				background-position: center;
+				background-repeat: no-repeat;
+				height: 100vh; /* Ajusta esto si quieres un tamaño diferente */
+				width: 100%;
+			}
+			.cuerpo-content {
+				position: relative;
+				z-index: 1;
+				/* Ajusta el padding o margen según sea necesario */
+			}
+		</style>
 	</head>
 	<body>
 		<div class="pre-loader">
@@ -211,7 +228,7 @@
 	{% block bar %}
 		<div class="left-side-bar">
 			<div class="brand-logo">
-				<a href="index.html">
+				<a href="#">
 					<img src="{% static 'vendors/images/deskapp-logo.svg' %}" alt="" class="dark-logo" />
 					<img
 						src="{% static 'vendors/images/deskapp-logo-white.svg' %}"
@@ -258,10 +275,14 @@
 					<!-- Checkbox select Datatable End -->
 					<!-- Export Datatable start -->
 					
-					{% block cuerpo %}
-                     
-                      
-					{% endblock cuerpo %}	
+					<div class="cuerpo-background">
+						<div class="cuerpo-content">
+							{% block cuerpo %}
+							<img src="{% static 'src/images/salud.jpg' %}" alt="Salud" style="width: 100%; height: auto;" />
+							{% endblock %}
+							
+						</div>
+					</div>
 					<!-- Export Datatable End -->
 				</div>
 				
