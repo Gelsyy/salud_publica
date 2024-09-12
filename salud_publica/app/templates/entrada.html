@@ -1,10 +1,10 @@
-<!DOCTYPE html>
 {% load static%}
+<!DOCTYPE html>
 <html>
 	<head>
 		<!-- Basic Page Info -->
 		<meta charset="utf-8" />
-		<title>salud_publica</title>
+		<title>Salud Pública </title>
 
 		<!-- Site favicon -->
 		<link
@@ -49,6 +49,7 @@
 			href="{% static 'src/plugins/jquery-steps/jquery.steps.css' %}"
 		/>
 		<link rel="stylesheet" type="text/css" href="{% static 'vendors/styles/style.css' %}" />
+		
 
 		<!-- Global site tag (gtag.js) - Google Analytics -->
 		<script
@@ -84,193 +85,232 @@
 		</script>
 		<!-- End Google Tag Manager -->
 	</head>
-
-	<body class="login-page">
-		<div class="login-header box-shadow">
-			<div
-				class="container-fluid d-flex justify-content-between align-items-center"
-			>
-				<div class="brand-logo">
-					<a href="login.html">
-						<img src="{% static 'vendors/images/deskapp-logo.svg' %}" alt="" />
-					</a>
-                                 
+	<body>
+		<div class="pre-loader">
+			<div class="pre-loader-box">
+				<div class="loader-logo">
+					<img src="{% static 'vendors/images/deskapp-logo.svg' %}" alt="" />
 				</div>
-				  <div class="login-menu">
-					<ul>
-						<li><a href="#">Volver</a></li>
-					</ul>
+				<div class="loader-progress" id="progress_div">
+					<div class="bar" id="bar1"></div>
 				</div>
+				<div class="percent" id="percent1">0%</div>
+				<div class="loading-text">Cargando...</div>
 			</div>
 		</div>
-		<div
-			class="register-page-wrap d-flex align-items-center flex-wrap justify-content-center"
-		>
-			<div class="container">
-				<div class="row align-items-center">
-					<div class="col-md-6 col-lg-7">
-						<img src="{% static 'vendors/images/register-page-img.png' %}" alt="" />
+
+		<div class="header">
+			<div class="header-left">
+				<div class="menu-icon bi bi-list"></div>
+				<div
+					class="search-toggle-icon bi bi-search"
+					data-toggle="header_search"
+				></div>
+				
+			</div>
+			<div class="header-right">
+				<div class="dashboard-setting user-notification">
+					<div class="dropdown">
+						<a
+							class="dropdown-toggle no-arrow"
+							href="javascript:;"
+							data-toggle="right-sidebar"
+						>
+							<i class="dw dw-settings2"></i>
+						</a>
 					</div>
-					<div class="col-md-6 col-lg-5">
-						<div class="register-box bg-white box-shadow border-radius-10">
-							<div class="wizard-content">
-								<form class="tab-wizard2 wizard-circle wizard" method="POST">
-									{% csrf_token %}
-									<!-- Step 2 -->
-									<h5>Rellena tu inventario aqui</h5>
-									<section>
-                                          <div class="form-wrap max-width-600 mx-auto">
-											
-											<input type="hidden" name="id_hospital" value="{{ hospital.id_hospital }}">
-            
-											<div class="form-group row">
-												<label class="col-sm-4 col-form-label"
-													>Lote*</label
-												>
-												<div class="col-sm-8">
-													<input type="text" class="form-control" required name="lote"/>
-													
-												</div>
-											</div>
-                                          <div class="form-wrap max-width-600 mx-auto">
-											<div class="form-group row">
-												<label class="col-sm-4 col-form-label"
-													>   Id Insumo*</label
-												>
-												<div class="col-sm-8">
-													
-													{{ form.id_insumo }}
-												</div>
-											</div>
-											<div class="container mt-4">
-												
-										<div class="form-wrap max-width-600 mx-auto">
-											<div class="form-group row">
-												<label class="col-sm-4 col-form-label"
-													>Cantidad de Entrada*</label
-												>
-												<div class="col-sm-8">
-													<input type="number" class="form-control"  required name="cantidad_entrada" />
-												</div>
-											</div>
-											
-													
-											<div class="container mt-4">
-    <div class="form-group row">
-        <label class="col-sm-4 col-form-label">Fecha vencimiento*</label>
-        <div class="col-sm-8">
-            <div class="input-group">
-                <input type="date" id="fechaInputEntrada" class="form-control"   required name="fecha_vencimiento" style="display: none;">
-                <div class="input-group-append">
-                    <button class="btn btn-outline-primary" type="button" id="toggleDatePickerEntrada">Elige</button>
-                </div>
-                <input type="text" class="form-control" id="fechaLabelEntrada" value="Selecciona" readonly>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="container mt-4">
-    <div class="form-group row">
-        <label class="col-sm-4 col-form-label">Fecha entrada*</label>
-        <div class="col-sm-8">
-            <div class="input-group">
-                <input type="date" id="fechaInputVencimiento" class="form-control"  required name="fecha_entrada" style="display: none;">
-                <div class="input-group-append">
-                    <button class="btn btn-outline-primary" type="button" id="toggleDatePickerVencimiento">Elige</button>
-                </div>
-                <input type="text" class="form-control" id="fechaLabelVencimiento" value="Selecciona" readonly>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const fechaLabelEntrada = document.getElementById('fechaLabelEntrada');
-        const fechaInputEntrada = document.getElementById('fechaInputEntrada');
-        const toggleDatePickerEntrada = document.getElementById('toggleDatePickerEntrada');
-
-        toggleDatePickerEntrada.addEventListener('click', function() {
-            fechaInputEntrada.style.display = 'block';
-            fechaInputEntrada.focus();
-        });
-
-        fechaInputEntrada.addEventListener('change', function() {
-            fechaLabelEntrada.value = fechaInputEntrada.value;
-            fechaInputEntrada.style.display = 'none';
-        });
-
-        const fechaLabelVencimiento = document.getElementById('fechaLabelVencimiento');
-        const fechaInputVencimiento = document.getElementById('fechaInputVencimiento');
-        const toggleDatePickerVencimiento = document.getElementById('toggleDatePickerVencimiento');
-
-        toggleDatePickerVencimiento.addEventListener('click', function() {
-            fechaInputVencimiento.style.display = 'block';
-            fechaInputVencimiento.focus();
-        });
-
-        fechaInputVencimiento.addEventListener('change', function() {
-            fechaLabelVencimiento.value = fechaInputVencimiento.value;
-            fechaInputVencimiento.style.display = 'none';
-        });
-    });
-</script>
-
- 
-                                                                 </div>
-						   			  </section>
-									
-										 <button
-										 type="submit"
-										 id="success-modal-btn"
-										 hidden
-										 data-toggle="modal"
-										 data-target="#success-modal"
-										 data-backdrop="static"
-									 >
-										 Launch modal
-									 </button>
-									 <div
-										 class="modal fade"
-										 id="success-modal"
-										 tabindex="-1"
-										 role="dialog"
-										 aria-labelledby="exampleModalCenterTitle"
-										 aria-hidden="true"
-									 >
-										 <div
-											 class="modal-dialog modal-dialog-centered max-width-400"
-											 role="document"
-										 >
-											 <div class="modal-content">
-												 <div class="modal-body text-center font-18">
-													 <h3 class="mb-20">Completado!</h3>
-													 <div class="mb-30 text-center">
-														 <img src="{% static 'vendors/images/success.png' %}" />
-													 </div>
-													 Se ha agragado un nuevo inventario
-												 </div>
-												 <div class="modal-footer justify-content-center">
-													 <a href="#" class="btn btn-primary">Hecho</a>
-												 </div>
-											 </div>
-										 </div>
-									 </div>
-									
-								</form>
-							</div>
+				</div>
+				
+				<div class="user-info-dropdown">
+					<div class="dropdown">
+						<a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown">
+							<span class="user-icon">
+								<img src="{% static 'vendors/images/o.png' %}" alt="" />
+							</span>
+							<span class="user-name">{{ user.username }}</span>
+						</a>
+						<div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
+							<a class="dropdown-item" href="{% url 'logout' %}"><i class="dw dw-logout"></i> Salir</a>
 						</div>
 					</div>
 				</div>
+				
 			</div>
 		</div>
-                                       
-		<!-- success Popup html Start -->
-	
-		<!-- success Popup html End -->
-		<!-- welcome modal start -->
+
+		<div class="right-sidebar">
+			<div class="sidebar-title">
+				<h3 class="weight-600 font-16 text-blue">
+					Configuración
+					<span class="btn-block font-weight-400 font-12"
+						>Interfaz</span
+					>
+				</h3>
+				<div class="close-sidebar" data-toggle="right-sidebar-close">
+					<i class="icon-copy ion-close-round"></i>
+				</div>
+			</div>
+			<div class="right-sidebar-body customscroll">
+				<div class="right-sidebar-body-content">
+					<h4 class="weight-600 font-18 pb-10">Barra Horizontal</h4>
+					<div class="sidebar-btn-group pb-30 mb-10">
+						<a
+							href="javascript:void(0);"
+							class="btn btn-outline-primary header-white active"
+							>Claro</a
+						>
+						<a
+							href="javascript:void(0);"
+							class="btn btn-outline-primary header-dark"
+							>Oscuro</a
+						>
+					</div>
+
+					<h4 class="weight-600 font-18 pb-10">Barra Vertical</h4>
+					<div class="sidebar-btn-group pb-30 mb-10">
+						<a
+							href="javascript:void(0);"
+							class="btn btn-outline-primary sidebar-light"
+							>Claro</a
+						>
+						<a
+							href="javascript:void(0);"
+							class="btn btn-outline-primary sidebar-dark active"
+							>Oscuro</a
+						>
+					</div>
+
+					
+
+					<div class="reset-options pt-30 text-center">
+						<button class="btn btn-danger" id="reset-settings">
+							Restablecer Configuración
+						</button>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+
+		<div class="left-side-bar">
+			<div class="brand-logo">
+				<a href="index.html">
+					<img src="{% static 'vendors/images/deskapp-logo.svg' %}" alt="" class="dark-logo" />
+					<img
+						src="{% static 'vendors/images/deskapp-logo-white.svg' %}"
+						alt=""
+						class="light-logo"
+					/>
+				</a>
+				<div class="close-sidebar" data-toggle="left-sidebar-close">
+					<i class="ion-close-round"></i>
+				</div>
+			</div>
+			
+		</div>
+		<div class="mobile-menu-overlay"></div>
+
 		
+		
+
+		<div class="main-container">
+			<div class="pd-ltr-20 xs-pd-20-10">
+				
+
+					<div class="pd-20 card-box mb-30">
+						
+						<div class="wizard-content">
+			
+							<form class="tab-wizard wizard-circle wizard" method="POST">
+								{% csrf_token %}
+								
+							{% if messages %}
+								<div class="alert-container">
+									{% for message in messages %}
+										<div class="alert alert-{{ message.tags }}">
+											{{ message }}
+										</div>
+									{% endfor %}
+								</div>
+							{% endif %}
+								<section>
+									<input type="hidden" name="id_hospital" value="{{ hospital.id_hospital }}">
+									<div class="row">
+										
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Lote :</label>
+												<input type="text" class="form-control" required name="lote" />
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Id insumo :</label>
+												<div class="col-sm-14">
+													<div class="form-group">	
+													    {{ form.id_insumo }}
+													</div>
+												</div>
+												
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Cantidad entrada :</label>
+												<input type="number" class="form-control" required name="cantidad_entrada"/>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Fecha de vencimiento :</label>
+												<input
+													type="date"
+													class="form-control "
+													placeholder="Selecciona la fecha "
+													required name="fecha_vencimiento"
+												/>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Fecha de entrada:</label>
+												<input
+													type="date"
+													class="form-control "
+													placeholder="Selecciona la fecha"
+													required name="fecha_entrada"
+												/>
+											</div>
+										</div>
+										
+									</div>
+								</section>
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="input-group mb-0">
+											
+											
+											<button class="btn btn-primary btn-lg btn-block" type="submit" >Agregar</button>
+											<a href="{% url 'detalles_inventario_hospital' id_hospital=hospital.id_hospital %}" class="btn btn-secondary btn-lg btn-block">Volver</a>
+											
+										</div>
+										
+										
+									</div>
+								</div>
+								
+							</form>
+						</div>
+					</div>
+		<div class="footer-wrap pd-20 mb-20 card-box">
+					Ministerio de Salud Pública  de la Provincia de Sancti Spiritus 
+					
+				</div>
 		<!-- welcome modal end -->
 		<!-- js -->
 		<script src="{% static 'vendors/scripts/core.js' %}"></script>
@@ -279,15 +319,6 @@
 		<script src="{% static 'vendors/scripts/layout-settings.js' %}"></script>
 		<script src="{% static 'src/plugins/jquery-steps/jquery.steps.js' %}"></script>
 		<script src="{% static 'vendors/scripts/steps-setting.js' %}"></script>
-		<!-- Google Tag Manager (noscript) -->
-		<noscript
-			><iframe
-				src="https://www.googletagmanager.com/ns.html?id=GTM-NXZMQSS"
-				height="0"
-				width="0"
-				style="display: none; visibility: hidden"
-			></iframe
-		></noscript>
-		<!-- End Google Tag Manager (noscript) -->
+		
 	</body>
 </html>

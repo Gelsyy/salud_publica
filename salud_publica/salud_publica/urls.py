@@ -9,7 +9,9 @@ from django.urls import reverse_lazy
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('aumentar_salidas/<int:id_inventario>/', views.aumentar_salidas, name='aumentar_salidas'),
+
     path('hospital/<int:id_hospital>/entrada/', views.entrada, name='entrada'),
+    
     path('', LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', views.custom_logout, name='logout'),
     path('error/<int:id_hospital>/', views.error, name='error'),

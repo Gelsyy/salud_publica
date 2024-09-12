@@ -13,6 +13,7 @@ from django.contrib.auth import logout
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 @login_required
 def custom_logout(request):
@@ -81,13 +82,13 @@ def entrada(request, id_hospital):
             inventario = form.save(commit=False)
             inventario.id_hospital = hospital
             inventario.save()
-            return redirect('detalles_inventario_hospital', id_hospital=id_hospital)
+            messages.success(request, 'Se agregó correctamente.')
+            return redirect('entrada', id_hospital=id_hospital)
         else:
-            return redirect('error2')
+            messages.error(request, 'No se pudo agregar. Por favor, revisa los datos.')
     else:
         form = InventarioForm()
-        
-        
+
     context = {
         'form': form,
         'hospital': hospital,

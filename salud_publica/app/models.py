@@ -57,7 +57,6 @@ class Inventario(models.Model):
         self.existencia = self.cantidad_entrada - self.cantidad_salida
         if self.cantidad_entrada != 0:
             self.cobertura = (self.existencia * 30) / self.cantidad_entrada
-     
         super().save(*args, **kwargs)
 
     def __str__(self):
