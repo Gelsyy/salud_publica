@@ -14,6 +14,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import HttpResponseForbidden
 
 @login_required
 def custom_logout(request):
@@ -107,13 +108,25 @@ def detalles_inventario_hospital(request, id_hospital):
     hospital = get_object_or_404(Hospital, id_hospital=id_hospital)
     inventarios = hospital.inventario_set.all()
 
+    try:
+        profile=Profile.objects.get(user=request.user)
+        if profile.hospital != hospital:
+            return HttpResponseForbidden("NO TIENE PERMISO PARA ACCEDER A ESTE INVENTARIO")
+    except Profile.DoesNotExist:
+        pass    
+
     # Obtener parámetros de búsqueda del formulario GET
     lote_query = request.GET.get('lote')
     insumo_id = request.GET.get('insumo_nombre')  # Cambiar a insumo_id para usar el ID del insumo
-
+    fecha = request.GET.get('fecha_entrada')
+    
     # Filtrar por nombre de insumo si se proporcionó
     if insumo_id:
         inventarios = inventarios.filter(id_insumo=insumo_id)
+
+     # Filtrar por nombre de fechca si se proporcionó
+    if fecha:
+        inventarios = inventarios.filter(fecha_entrada=fecha)     
 
     # Filtrar por lote si se proporcionó
     if lote_query:
