@@ -26,7 +26,7 @@ class Hospital(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    hospital = models.ForeignKey(Hospital, on_delete=models.CASCADE) 
+    hospital = models.ForeignKey(Hospital, on_delete=models.CASCADE, unique=True) 
 
     def __str__(self):
         return self.user.username

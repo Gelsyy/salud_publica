@@ -136,7 +136,7 @@
                                     <form method="POST" action="{% url 'aumentar_salidas' inventario.id_inventario %}" class="d-inline">
                                         {% csrf_token %}
                                         <div class="input-group">
-                                            <input type="number" name="cantidad_salida" value="{{ inventario.cantidad_salida }}" min="1" class="form-control" style="max-width: 80px;">
+                                            <input type="number" name="cantidad_salida" value="{{ inventario.cantidad_salida }}" min="0" class="form-control" style="max-width: 80px;">
                                             <div class="input-group-append">
                                                 <button type="submit" class="btn btn-primary"><i class="dw dw-chevron-right"></i> OK</button>
                                             </div>
