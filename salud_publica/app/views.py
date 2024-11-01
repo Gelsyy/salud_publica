@@ -117,8 +117,13 @@ def detalles_inventario_hospital(request, id_hospital):
 
     # Obtener parámetros de búsqueda del formulario GET
     lote_query = request.GET.get('lote')
-    insumo_id = request.GET.get('insumo_nombre')  # Cambiar a insumo_id para usar el ID del insumo
+    insumo_id = request.GET.get('insumo_nombre')  
     fecha = request.GET.get('fecha_entrada')
+    cobertura_critica = request.GET.get('cobertura_critica')  
+    cobertura_limite = request.GET.get('cobertura_limite') 
+    
+   
+
     
     # Filtrar por nombre de insumo si se proporcionó
     if insumo_id:
@@ -131,6 +136,14 @@ def detalles_inventario_hospital(request, id_hospital):
     # Filtrar por lote si se proporcionó
     if lote_query:
         inventarios = inventarios.filter(lote__icontains=lote_query)
+    
+     # Filtrar por cobertura crítica si se seleccionó el checkbox
+    if cobertura_critica:
+        inventarios = [inv for inv in inventarios if inv.cobertura_field < 15]  
+    # Filtrar por cobertura límite si se seleccionó el checkbox
+    if cobertura_limite:
+        inventarios = [inv for inv in inventarios if inv.cobertura_field == 15]
+
 
     # Obtener todos los insumos para el formulario de selección
     nombre_insumos = Insumo.objects.all()
