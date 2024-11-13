@@ -4,7 +4,7 @@
 <form method="get" action="{% url 'detalles_inventario_hospital' id_hospital=hospital.id_hospital %}">
     <div class="form-group mb-0">
         <i class="dw dw-search2 search-icon"></i>
-        <div class="form-control search-input" contenteditable="false">Desplaza el buscador</div>
+        <div class="form-control search-input" contenteditable="false">BUSCAR</div>
         <div class="dropdown">
             <a class="dropdown-toggle no-arrow" href="#" role="button" data-toggle="dropdown">
                 <i class="ion-arrow-down-c"></i>
@@ -63,19 +63,38 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-12 col-md-2 col-form-label">Cobertura Crítica</label>
-                    <div class="col-sm-12 col-md-10">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="cobertura_critica" id="coberturaCritica" value="1" {% if request.GET.cobertura_critica %}checked{% endif %}>
-                            <label class="form-check-label" for="coberturaCritica">Mostrar solo coberturas críticas</label>
-                        </div>
+                    <label for="fecha_inicio" class="col-sm-2 col-form-label">Fecha Inicio Entrada</label>
+                    <div class="col-sm-10">
+                        <input type="date" id="fecha_inicio" name="fecha_inicio" class="form-control" value="{{ request.GET.fecha_inicio }}">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-12 col-md-2 col-form-label">Cobertura Límite</label>
+                    <label for="fecha_fin" class="col-sm-2 col-form-label">Fecha Fín Entrada</label>
+                    <div class="col-sm-10">
+                        <input type="date" id="fecha_fin" name="fecha_fin" class="form-control" value="{{ request.GET.fecha_fin }}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-12 col-md-2 col-form-label">Opciones de Filtro</label>
                     <div class="col-sm-12 col-md-10">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="cobertura_limite" id="coberturaLimite" value="1" {% if request.GET.cobertura_limite %}checked{% endif %}>
+                            <!-- Próximo a vencer -->
+                            <input class="form-check-input" type="radio" name="filtro" id="proximo_vencer" value="proximo_vencer" {% if request.GET.filtro == 'proximo_vencer' %}checked{% endif %}>
+                            <label class="form-check-label" for="proximo_vencer">Mostrar insumos próximos a vencer</label>
+                        </div>
+                        <div class="form-check">
+                            <!-- vencidos-->
+                            <input class="form-check-input" type="radio" name="filtro" id="vencidos" value="vencidos" {% if request.GET.filtro == 'vencidos' %}checked{% endif %}>
+                            <label class="form-check-label" for="vencidos">Mostrar insumos vencidos</label>
+                        </div>
+                        <div class="form-check">
+                            <!-- Cobertura Crítica -->
+                            <input class="form-check-input" type="radio" name="filtro" id="coberturaCritica" value="cobertura_critica" {% if request.GET.filtro == 'cobertura_critica' %}checked{% endif %}>
+                            <label class="form-check-label" for="coberturaCritica">Mostrar solo coberturas críticas</label>
+                        </div>
+                        <div class="form-check">
+                            <!-- Cobertura Límite -->
+                            <input class="form-check-input" type="radio" name="filtro" id="coberturaLimite" value="cobertura_limite" {% if request.GET.filtro == 'cobertura_limite' %}checked{% endif %}>
                             <label class="form-check-label" for="coberturaLimite">Mostrar solo coberturas al límite</label>
                         </div>
                     </div>
@@ -156,7 +175,7 @@
                                     <form method="POST" action="{% url 'aumentar_salidas' inventario.id_inventario %}" class="d-inline">
                                         {% csrf_token %}
                                         <div class="input-group">
-                                            <input type="number" name="cantidad_salida" value="{{ inventario.cantidad_salida }}" min="0" class="form-control" style="max-width: 80px;">
+                                            <input type="number" name="cantidad_salida" value="0" min="0" class="form-control" style="max-width: 80px;">
                                             <div class="input-group-append">
                                                 <button type="submit" class="btn btn-primary"><i class="dw dw-chevron-right"></i> OK</button>
                                             </div>
@@ -169,7 +188,9 @@
                                 <td>{{ inventario.existencia }}</td>
                                 <td>{{ inventario.fecha_entrada }}</td>
                                 
-                                <td>{{ inventario.fecha_vencimiento }}</td>
+                                <td style="color: {% if inventario.fecha_vencimiento <= today %}red{% endif %};">
+                                    {{ inventario.fecha_vencimiento }}
+                                </td>
                                 
                                 <td style="color: {% if inventario.cobertura_field > 15 %}green{% elif inventario.cobertura_field == 15 %}yellow{% else %}red{% endif %};">
                                     {{ inventario.cobertura_field|floatformat:2 }}

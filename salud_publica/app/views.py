@@ -15,6 +15,9 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseForbidden
+from django.utils import timezone
+from datetime import timedelta
+
 
 @login_required
 def custom_logout(request):
@@ -107,7 +110,7 @@ def listar_hospitales(request):
 def detalles_inventario_hospital(request, id_hospital):
     hospital = get_object_or_404(Hospital, id_hospital=id_hospital)
     inventarios = hospital.inventario_set.all()
-
+    today = timezone.now().date()
     try:
         profile=Profile.objects.get(user=request.user)
         if profile.hospital != hospital:
@@ -119,11 +122,15 @@ def detalles_inventario_hospital(request, id_hospital):
     lote_query = request.GET.get('lote')
     insumo_id = request.GET.get('insumo_nombre')  
     fecha = request.GET.get('fecha_entrada')
-    cobertura_critica = request.GET.get('cobertura_critica')  
-    cobertura_limite = request.GET.get('cobertura_limite') 
-    
+    filtro = request.GET.get('filtro')
+    fecha_inicio = request.GET.get('fecha_inicio')
+    fecha_fin = request.GET.get('fecha_fin')
    
-
+   
+    if fecha_inicio and fecha_fin:
+        fecha_inicio = datetime.strptime(fecha_inicio, '%Y-%m-%d').date()
+        fecha_fin = datetime.strptime(fecha_fin, '%Y-%m-%d').date()
+        inventarios = inventarios.filter(fecha_entrada__range=(fecha_inicio, fecha_fin))
     
     # Filtrar por nombre de insumo si se proporcionó
     if insumo_id:
@@ -132,28 +139,33 @@ def detalles_inventario_hospital(request, id_hospital):
      # Filtrar por nombre de fechca si se proporcionó
     if fecha:
         inventarios = inventarios.filter(fecha_entrada=fecha)     
-
-    # Filtrar por lote si se proporcionó
+     # Filtrar por lote si se proporcionó
     if lote_query:
-        inventarios = inventarios.filter(lote__icontains=lote_query)
-    
-     # Filtrar por cobertura crítica si se seleccionó el checkbox
-    if cobertura_critica:
-        inventarios = [inv for inv in inventarios if inv.cobertura_field < 15]  
-    # Filtrar por cobertura límite si se seleccionó el checkbox
-    if cobertura_limite:
+        inventarios = inventarios.filter(lote__icontains=lote_query)   
+   
+    if filtro == 'proximo_vencer':
+        fecha_hoy = timezone.now().date()
+        fecha_limite = fecha_hoy + timedelta(days=15)
+        inventarios = inventarios.filter(fecha_vencimiento__range=(fecha_hoy, fecha_limite))
+    elif filtro == 'vencidos':
+        fecha_hoy = timezone.now().date()
+        inventarios = inventarios.filter(fecha_vencimiento__lt=fecha_hoy)
+    elif filtro == 'cobertura_critica':
+         inventarios = [inv for inv in inventarios if inv.cobertura_field < 15] 
+    elif filtro == 'cobertura_limite':
         inventarios = [inv for inv in inventarios if inv.cobertura_field == 15]
-
-
     # Obtener todos los insumos para el formulario de selección
     nombre_insumos = Insumo.objects.all()
 
     context = {
         'hospital': hospital,
         'inventarios': inventarios,
-        'nombre_insumos': nombre_insumos,  # Pasar la lista de insumos al contexto
+        'nombre_insumos': nombre_insumos,  
         'lote_query': lote_query,
-        'insumo_id': insumo_id,  # Pasar el ID del insumo seleccionado
+        'insumo_id': insumo_id,  
+        'today': today,
+        'fecha_inicio': fecha_inicio,
+        'fecha_fin': fecha_fin,
     }
     return render(request, 'listar_hospital.html', context)
 
