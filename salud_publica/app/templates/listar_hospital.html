@@ -79,6 +79,11 @@
                     <div class="col-sm-12 col-md-10">
                         <div class="form-check">
                             <!-- Próximo a vencer -->
+                            <input class="form-check-input" type="radio" name="filtro" id="todos" value="todos" {% if request.GET.filtro == 'todos' %}checked{% endif %}>
+                            <label class="form-check-label" for="todos">Mostrar todos insumos</label>
+                        </div>
+                        <div class="form-check">
+                            <!-- Próximo a vencer -->
                             <input class="form-check-input" type="radio" name="filtro" id="proximo_vencer" value="proximo_vencer" {% if request.GET.filtro == 'proximo_vencer' %}checked{% endif %}>
                             <label class="form-check-label" for="proximo_vencer">Mostrar insumos próximos a vencer</label>
                         </div>
@@ -111,7 +116,8 @@
 
 
 {% endblock barra %}
-
+{% block usuario %}
+{% endblock usuario %}
 {% block agregar %}
 <div class="mp-20">
     <!-- Botón de agregar inventario -->
@@ -119,6 +125,7 @@
     <a href="{% url 'entrada' id_hospital=hospital.id_hospital %}" class="btn btn-primary" title="Agregar inventario">
         <i class="bi bi-plus-lg"></i> Agregar
     </a>
+    
      {% endif %}
 
 </div>

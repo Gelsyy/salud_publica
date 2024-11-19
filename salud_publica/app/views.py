@@ -17,7 +17,7 @@ from django.contrib import messages
 from django.http import HttpResponseForbidden
 from django.utils import timezone
 from datetime import timedelta
-
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 @login_required
 def custom_logout(request):
@@ -147,6 +147,8 @@ def detalles_inventario_hospital(request, id_hospital):
         fecha_hoy = timezone.now().date()
         fecha_limite = fecha_hoy + timedelta(days=15)
         inventarios = inventarios.filter(fecha_vencimiento__range=(fecha_hoy, fecha_limite))
+    elif filtro == 'todos':
+         inventarios = [inv for inv in inventarios] 
     elif filtro == 'vencidos':
         fecha_hoy = timezone.now().date()
         inventarios = inventarios.filter(fecha_vencimiento__lt=fecha_hoy)
@@ -169,3 +171,7 @@ def detalles_inventario_hospital(request, id_hospital):
     }
     return render(request, 'listar_hospital.html', context)
 
+@login_required
+@user_passes_test(lambda u: u.is_staff)  # Solo para usuarios con permisos de staff
+def redirect_to_admin(request):
+    return redirect('/admin/')
